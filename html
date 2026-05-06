@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Relationships among Angles, Arcs and Chords</title>
+    
+    <script>
+      window.MathJax = {
+        tex: {
+          inlineMath: [['\\(', '\\)']]
+        }
+      };
+    </script>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    
+    <link rel="stylesheet" type="text/css" href="https://tikzjax.com/v1/fonts.css">
+    <script src="https://tikzjax.com/v1/tikzjax.js"></script>
+
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --secondary: #18bc9c;
+            --accent: #f39c12;
+            --bg-color: #f4f7f6;
+            --text-color: #333;
+            --correct: #27ae60;
+            --incorrect: #e74c3c;
+            --challenge: #8e44ad;
+        }
+
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: var(--bg-color); color: var(--text-color); line-height: 1.6; margin: 0; padding: 20px; }
+        h1 { text-align: center; color: var(--primary); margin-bottom: 30px; }
+
+        .container { max-width: 1100px; margin: 0 auto; background: #fff; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); position: relative; }
+
+        /* Tabs styling */
+        .tabs { display: flex; background: var(--primary); flex-wrap: wrap; border-radius: 8px 8px 0 0; }
+        .tab-button { flex: 1; padding: 12px; text-align: center; background: none; border: none; color: white; cursor: pointer; font-size: 13px; font-weight: bold; transition: all 0.3s; border-right: 1px solid rgba(255,255,255,0.1); }
+        .tab-button:last-child { border-right: none; }
+        .tab-button:hover, .tab-button:focus { background: #34495e; outline: none; }
+        .tab-button.active { background: var(--secondary); color: #fff; border-bottom: 4px solid #128f76; }
+
+        /* FIXED Tab Content - using display instead of absolute positioning to prevent invisible overlapping */
+        .tab-content-wrapper { padding: 30px; min-height: 500px; }
+        .tab-content { display: none; animation: fadeIn 0.4s ease-in-out; }
+        .tab-content.active { display: block; }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Layout Elements */
+        .hook-box { background: #e8f6f3; border-left: 5px solid var(--secondary); padding: 15px; margin-bottom: 20px; border-radius: 0 4px 4px 0; font-style: italic; }
+        
+        .grid { display: flex; gap: 25px; margin-top: 20px; }
+        .card { flex: 1; background: #fdfdfd; padding: 25px; border-radius: 8px; border: 1px solid #eee; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
+        .variation-card { background: #fffafa; border-color: #ffdddd; }
+        
+        .tikz-container { text-align: center; margin-top: 20px; background: white; padding: 15px; border-radius: 8px; border: 1px solid #f0f0f0; min-height: 200px; display: flex; align-items: center; justify-content: center; overflow: hidden;}
+        
+        h2 { margin-top: 0; color: var(--primary); }
+        h3 { color: var(--primary); margin-top: 0; border-bottom: 2px solid #eee; padding-bottom: 5px;}
+        .variation-card h3 { color: #c0392b; border-bottom-color: #ffdddd; }
+
+        /* Styled abbreviations for geometric reasons */
+        .math-abbrev { background-color: #f0f0f0; padding: 3px 6px; border-radius: 4px; font-family: monospace; color: #c0392b; font-weight: bold; }
+
+        /* Interactive Quiz & Button Elements */
+        .quiz-section { margin-top: 30px; background: #fef9e7; padding: 20px; border-radius: 8px; border: 1px solid #fdebd0; }
+        .quiz-section h4 { margin-top: 0; color: #d35400; border-bottom: 1px solid #fdebd0; padding-bottom: 10px;}
+        
+        .tf-question { margin-bottom: 20px; }
+        .reveal-btn { background: var(--accent); color: white; border: none; padding: 8px 15px; border-radius: 4px; cursor: pointer; font-weight: bold; transition: background 0.2s; margin-top: 10px; position: relative; z-index: 10; }
+        .reveal-btn:hover { background: #d68910; }
+        
+        .feedback { display: none; margin-top: 15px; padding: 15px; background: white; border-left: 4px solid var(--accent); border-radius: 4px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        
+        /* Multiple Choice Styling */
+        .mc-question { margin-top: 20px; padding-top: 20px; border-top: 1px dashed #f5cba7; }
+        .mc-options { display: flex; flex-direction: column; gap: 10px; margin-top: 10px; }
+        .mc-option { text-align: left; background: #fff; border: 1px solid #ddd; padding: 10px 15px; border-radius: 4px; cursor: pointer; font-size: 14px; transition: 0.2s; position: relative; z-index: 10;}
+        .mc-option:hover:not(:disabled) { background: #f0f0f0; border-color: #bbb; }
+        .mc-option:disabled { cursor: not-allowed; opacity: 0.8; }
+
+        @media (max-width: 768px) {
+            .grid { flex-direction: column; }
+            .tabs { flex-direction: column; }
+            .tab-button { border-right: none; border-bottom: 1px solid rgba(255,255,255,0.1); }
+            .tab-content-wrapper { padding: 20px; }
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Relationships among Angles, Arcs and Chords</h1>
+    
+    <div class="container">
+        <div class="tabs" role="tablist">
+            <button class="tab-button active" role="tab" onclick="openTab(event, 'tab1')">1. Angles & Arcs</button>
+            <button class="tab-button" role="tab" onclick="openTab(event, 'tab2')">2. Angles & Chords</button>
+            <button class="tab-button" role="tab" onclick="openTab(event, 'tab3')">3. Chords & Arcs</button>
+            <button class="tab-button" role="tab" onclick="openTab(event, 'tab4')">4. Proportional Arcs</button>
+        </div>
+
+        <div class="tab-content-wrapper">
+            
+            <div id="tab1" class="tab-content active" role="tabpanel">
+                <h2>1. Equal Angles and Equal Arcs (Theorem 10)</h2>
+                <div class="hook-box"><strong>The Core Concept:</strong> If you slice a pie from the exact centre using identical angles, the curved crust pieces you create will be exactly the same length. It works perfectly in reverse, too!</div>
+
+                <div class="grid">
+                    <div class="card">
+                        <h3>Property Definition</h3>
+                        <p>Equal angles at the centre stand on equal arcs, and conversely, equal arcs subtend equal angles at the centre.</p>
+                        <p><strong>Condition 1:</strong> If \(\angle AOB = \angle COD\), then arc \(AB\) = arc \(CD\).</p>
+                        <p><strong>Reason:</strong> <span class="math-abbrev">equal angles, equal arcs</span></p>
+                        <p><strong>Condition 2:</strong> If arc \(AB\) = arc \(CD\), then \(\angle AOB = \angle COD\).</p>
+                        <p><strong>Reason:</strong> <span class="math-abbrev">equal arcs, equal angles</span></p>
+                        
+                        <div class="tikz-container">
+                            <script type="text/tikz">
+                                \begin{tikzpicture}[scale=1]
+                                    \draw (0,0) circle (2cm);
+                                    \filldraw (0,0) circle (1.5pt) node[below] {$O$};
+                                    \filldraw (1.414, 1.414) circle (1.5pt) node[above right] {$A$};
+                                    \filldraw (1.93, 0.517) circle (1.5pt) node[right] {$B$};
+                                    \filldraw (-1.414, 1.414) circle (1.5pt) node[above left] {$D$};
+                                    \filldraw (-1.93, 0.517) circle (1.5pt) node[left] {$C$};
+                                    
+                                    \draw (0,0) -- (1.414, 1.414); \draw (0,0) -- (1.93, 0.517);
+                                    \draw (0,0) -- (-1.414, 1.414); \draw (0,0) -- (-1.93, 0.517);
+                                    
+                                    \draw (0.8, 0.7) node {$x$}; \draw (-0.8, 0.7) node {$x$};
+                                    
+                                    \draw[thick, blue] (1.93, 0.517) arc (15:45:2cm);
+                                    \draw[thick, blue] (-1.414, 1.414) arc (135:165:2cm);
+                                \end{tikzpicture}
+                            </script>
+                        </div>
+                    </div>
+
+                    <div class="card variation-card">
+                        <h3>Variation: Angles at the Circumference</h3>
+                        <p>Because the angle at the centre is always twice the angle at the circumference, this rule applies to the edge too! Equal angles at the <strong>circumference</strong> also stand on equal arcs.</p>
+                        <div class="tikz-container">
+                            <script type="text/tikz">
+                                \begin{tikzpicture}[scale=1]
+                                    \draw (0,0) circle (2cm);
+                                    \filldraw (0,-2) circle (1.5pt) node[below] {$P$};
+                                    \filldraw (1.414, 1.414) circle (1.5pt) node[above right] {$A$};
+                                    \filldraw (1.93, 0.517) circle (1.5pt) node[right] {$B$};
+                                    \filldraw (-1.414, 1.414) circle (1.5pt) node[above left] {$D$};
+                                    \filldraw (-1.93, 0.517) circle (1.5pt) node[left] {$C$};
+                                    
+                                    \draw[dashed, red] (0,-2) -- (1.414, 1.414); \draw[dashed, red] (0,-2) -- (1.93, 0.517);
+                                    \draw[dashed, red] (0,-2) -- (-1.414, 1.414); \draw[dashed, red] (0,-2) -- (-1.93, 0.517);
+                                    
+                                    \draw[thick, blue] (1.93, 0.517) arc (15:45:2cm);
+                                    \draw[thick, blue] (-1.414, 1.414) arc (135:165:2cm);
+                                \end{tikzpicture}
+                            </script>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="quiz-section">
+                    <h4>Self-Check Quiz</h4>
+                    <div class="tf-question">
+                        <strong>True or False:</strong> The theorem only works if the two equal angles are located inside the exact same circle; it cannot be applied to two separate circles.
+                        <br><button class="reveal-btn" onclick="toggleFeedback('feed1-tf')">Reveal Answer</button>
+                        <div id="feed1-tf" class="feedback"><strong>False!</strong> The rule works in the same circle, OR in <em>equal/congruent circles</em> (circles that have the exact same radius).</div>
+                    </div>
+
+                    <div class="mc-question">
+                        <strong>Multiple Choice:</strong> In a circle with centre \(O\), arc \(PQ\) has a length of \(8\text{ cm}\) and subtends an angle of \(50^\circ\) at the centre. If another arc \(RS\) in the same circle also subtends an angle of \(50^\circ\) at the centre, what is the length of arc \(RS\)?
+                        <div class="mc-options">
+                            <button class="mc-option" onclick="handleMC(this, false, 'feed1-mc')">A) 4 cm</button>
+                            <button class="mc-option" onclick="handleMC(this, true, 'feed1-mc')">B) 8 cm</button>
+                            <button class="mc-option" onclick="handleMC(this, false, 'feed1-mc')">C) 16 cm</button>
+                            <button class="mc-option" onclick="handleMC(this, false, 'feed1-mc')">D) Cannot be determined</button>
+                        </div>
+                        <div id="feed1-mc" class="feedback">
+                            <span class="mc-result-msg"></span> <strong>Explanation: (B)</strong> Because the angles at the centre are equal (\(50^\circ = 50^\circ\)), the arcs must be equal in length. Therefore, arc \(RS = 8\text{ cm}\).
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="tab2" class="tab-content" role="tabpanel">
+                <h2>2. Equal Angles and Equal Chords (Theorem 11)</h2>
+                <div class="hook-box"><strong>Geometric Link:</strong> The arc is the curved crust of the slice, but the chord is the straight line connecting the slice's corners. If the central angles are identical, the straight chords must also be identical!</div>
+
+                <div class="grid">
+                    <div class="card">
+                        <h3>Property Definition</h3>
+                        <p>Equal angles at the centre stand on equal chords, and conversely, equal chords subtend equal angles at the centre.</p>
+                        <p><strong>Condition 1:</strong> If \(\angle AOB = \angle COD\), then chord \(AB\) = chord \(CD\).</p>
+                        <p><strong>Reason:</strong> <span class="math-abbrev">equal angles, equal chords</span></p>
+                        <p><strong>Condition 2:</strong> If chord \(AB\) = chord \(CD\), then \(\angle AOB = \angle COD\).</p>
+                        <p><strong>Reason:</strong> <span class="math-abbrev">equal chords, equal angles</span></p>
+                        
+                        <div class="tikz-container">
+                            <script type="text/tikz">
+                                \begin{tikzpicture}[scale=1]
+                                    \draw (0,0) circle (2cm);
+                                    \filldraw (0,0) circle (1.5pt) node[below] {$O$};
+                                    \filldraw (1.414, 1.414) circle (1.5pt) node[above right] {$A$};
+                                    \filldraw (1.93, 0.517) circle (1.5pt) node[right] {$B$};
+                                    \filldraw (-1.414, 1.414) circle (1.5pt) node[above left] {$D$};
+                                    \filldraw (-1.93, 0.517) circle (1.5pt) node[left] {$C$};
+                                    
+                                    \draw (0,0) -- (1.414, 1.414); \draw (0,0) -- (1.93, 0.517);
+                                    \draw (0,0) -- (-1.414, 1.414); \draw (0,0) -- (-1.93, 0.517);
+                                    
+                                    \draw (0.8, 0.7) node {$y$}; \draw (-0.8, 0.7) node {$y$};
+                                    
+                                    \draw[thick, red] (1.414, 1.414) -- (1.93, 0.517);
+                                    \draw[thick, red] (-1.414, 1.414) -- (-1.93, 0.517);
+                                \end{tikzpicture}
+                            </script>
+                        </div>
+                    </div>
+
+                    <div class="card variation-card">
+                        <h3>Variation: Proof via Congruence</h3>
+                        <p>Why is this true? Because triangles \(\triangle AOB\) and \(\triangle COD\) are congruent! They share two equal radii (Side, Side) and an identical central angle (Angle). By <strong>SAS</strong>, the third sides (the chords) must be equal.</p>
+                        <div class="tikz-container">
+                            <script type="text/tikz">
+                                \begin{tikzpicture}[scale=1]
+                                    \draw (0,0) circle (2cm);
+                                    \filldraw (0,0) circle (1.5pt) node[below] {$O$};
+                                    \draw (0,0) -- (1.414, 1.414) node[midway, above left] {$r$}; 
+                                    \draw (0,0) -- (1.93, 0.517) node[midway, below right] {$r$};
+                                    \draw (0,0) -- (-1.414, 1.414) node[midway, above right] {$r$}; 
+                                    \draw (0,0) -- (-1.93, 0.517) node[midway, below left] {$r$};
+                                    
+                                    \draw[thick, red] (1.414, 1.414) -- (1.93, 0.517);
+                                    \draw[thick, red] (-1.414, 1.414) -- (-1.93, 0.517);
+                                \end{tikzpicture}
+                            </script>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="quiz-section">
+                    <h4>Self-Check Quiz</h4>
+                    <div class="tf-question">
+                        <strong>True or False:</strong> If two chords in a circle are equal in length, the triangles formed by connecting their endpoints to the centre will always have the exact same area.
+                        <br><button class="reveal-btn" onclick="toggleFeedback('feed2-tf')">Reveal Answer</button>
+                        <div id="feed2-tf" class="feedback"><strong>True!</strong> Because equal chords subtend equal angles at the centre, the two triangles formed (\(\triangle AOB\) and \(\triangle COD\)) are perfectly congruent (SSS or SAS). Congruent triangles always have equal area.</div>
+                    </div>
+
+                    <div class="mc-question">
+                        <strong>Multiple Choice:</strong> Chords \(AB\) and \(CD\) are equal in length. \(\angle AOB = 60^\circ\). What kind of triangle is \(\triangle AOB\)?
+                        <div class="mc-options">
+                            <button class="mc-option" onclick="handleMC(this, false, 'feed2-mc')">A) Right-angled</button>
+                            <button class="mc-option" onclick="handleMC(this, true, 'feed2-mc')">B) Equilateral</button>
+                            <button class="mc-option" onclick="handleMC(this, false, 'feed2-mc')">C) Scalene</button>
+                            <button class="mc-option" onclick="handleMC(this, false, 'feed2-mc')">D) Obtuse</button>
+                        </div>
+                        <div id="feed2-mc" class="feedback">
+                            <span class="mc-result-msg"></span> <strong>Explanation: (B)</strong> \(\triangle AOB\) is an isosceles triangle because \(OA = OB\) (radii). If the central angle is \(60^\circ\), the base angles must be \((180^\circ - 60^\circ) / 2 = 60^\circ\). A triangle with three \(60^\circ\) angles is equilateral!
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="tab3" class="tab-content" role="tabpanel">
+                <h2>3. Equal Chords and Equal Arcs (Theorem 12)</h2>
+                <div class="hook-box"><strong>The Bridge:</strong> We established that Angles = Arcs, and Angles = Chords. Logic dictates that the middleman can be removed: Equal Chords must directly equal Equal Arcs!</div>
+
+                <div class="grid">
+                    <div class="card">
+                        <h3>Property Definition</h3>
+                        <p>Equal chords cut off equal arcs, and conversely, equal arcs cut off equal chords.</p>
+                        <p><strong>Condition 1:</strong> If chord \(AB\) = chord \(CD\), then arc \(AB\) = arc \(CD\).</p>
+                        <p><strong>Reason:</strong> <span class="math-abbrev">equal chords, equal arcs</span></p>
+                        <p><strong>Condition 2:</strong> If arc \(AB\) = arc \(CD\), then chord \(AB\) = chord \(CD\).</p>
+                        <p><strong>Reason:</strong> <span class="math-abbrev">equal arcs, equal chords</span></p>
+                        
+                        <div class="tikz-container">
+                            <script type="text/tikz">
+                                \begin{tikzpicture}[scale=1]
+                                    \draw (0,0) circle (2cm);
+                                    \filldraw (0,0) circle (1.5pt) node[below] {$O$};
+                                    \filldraw (1.414, 1.414) circle (1.5pt) node[above right] {$A$};
+                                    \filldraw (1.93, 0.517) circle (1.5pt) node[right] {$B$};
+                                    \filldraw (-1.414, 1.414) circle (1.5pt) node[above left] {$D$};
+                                    \filldraw (-1.93, 0.517) circle (1.5pt) node[left] {$C$};
+                                    
+                                    \draw[thick, red] (1.414, 1.414) -- (1.93, 0.517);
+                                    \draw[thick, red] (-1.414, 1.414) -- (-1.93, 0.517);
+                                    
+                                    \draw[thick, blue] (1.93, 0.517) arc (15:45:2cm);
+                                    \draw[thick, blue] (-1.414, 1.414) arc (135:165:2cm);
+                                \end{tikzpicture}
+                            </script>
+                        </div>
+                    </div>
+
+                    <div class="card variation-card">
+                        <h3>Variation: The Logical Triangle</h3>
+                        <p>The textbook notes a golden rule: "If any one of 'equal angles', 'equal arcs', and 'equal chords' is true, the other two must be true." They are locked in a permanent, reversible triad of geometry.</p>
+                        <div class="tikz-container" style="display:flex; flex-direction:column; align-items:center;">
+                            <strong>Equal Arcs</strong>
+                            <div style="font-size: 24px;">↕</div>
+                            <strong>Equal Angles</strong>
+                            <div style="font-size: 24px;">↕</div>
+                            <strong>Equal Chords</strong>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="quiz-section">
+                    <h4>Self-Check Quiz</h4>
+                    <div class="tf-question">
+                        <strong>True or False:</strong> This theorem implies that the straight length of a chord is exactly equal to the curved length of its arc.
+                        <br><button class="reveal-btn" onclick="toggleFeedback('feed3-tf')">Reveal Answer</button>
+                        <div id="feed3-tf" class="feedback"><strong>False!</strong> A straight line is always the shortest distance between two points. The chord length is always strictly less than the arc length. The theorem only says that if Chord A = Chord B, then Arc A = Arc B.</div>
+                    </div>
+
+                    <div class="mc-question">
+                        <strong>Multiple Choice:</strong> In a regular hexagon inscribed perfectly inside a circle, what can you say about the six minor arcs cut off by the sides of the hexagon?
+                        <div class="mc-options">
+                            <button class="mc-option" onclick="handleMC(this, true, 'feed3-mc')">A) All six arcs are equal in length.</button>
+                            <button class="mc-option" onclick="handleMC(this, false, 'feed3-mc')">B) Only alternate arcs are equal.</button>
+                            <button class="mc-option" onclick="handleMC(this, false, 'feed3-mc')">C) They are proportional to the radius but not equal to each other.</button>
+                            <button class="mc-option" onclick="handleMC(this, false, 'feed3-mc')">D) Cannot be determined.</button>
+                        </div>
+                        <div id="feed3-mc" class="feedback">
+                            <span class="mc-result-msg"></span> <strong>Explanation: (A)</strong> A regular hexagon has 6 sides of identical length. Because these sides act as chords inside the circle, and equal chords cut off equal arcs, all 6 arcs must be exactly equal in length.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="tab4" class="tab-content" role="tabpanel">
+                <h2>4. Arcs Proportional to Angles (Theorems 13 & 14)</h2>
+                <div class="hook-box"><strong>The Scaling Rule:</strong> If you double the angle of your pie slice, the crust edge of that slice becomes exactly twice as long! Arcs scale perfectly with their angles.</div>
+
+                <div class="grid">
+                    <div class="card">
+                        <h3>Property Definition</h3>
+                        <p>The ratio of the lengths of two arcs is equal to the ratio of the angles subtended at the centre (or at the circumference).</p>
+                        <p><strong>Condition:</strong> \(\text{Arc } AB : \text{Arc } CD = m : n\)</p>
+                        <p><strong>Reason (Centre):</strong> <span class="math-abbrev">arcs prop. to \(\angle\)s at centre</span></p>
+                        <p><strong>Reason (Circumference):</strong> <span class="math-abbrev">arcs prop. to \(\angle\)s at circumference</span></p>
+                        
+                        <div class="tikz-container">
+                            <script type="text/tikz">
+                                \begin{tikzpicture}[scale=1]
+                                    \draw (0,0) circle (2cm);
+                                    \filldraw (0,0) circle (1.5pt) node[below] {$O$};
+                                    
+                                    \draw (0,0) -- (2,0) node[right] {$A$};
+                                    \draw (0,0) -- (1.414, 1.414) node[above right] {$B$};
+                                    \draw (0,0) -- (0,2) node[above] {$C$};
+                                    \draw (0,0) -- (-2,0) node[left] {$D$};
+                                    
+                                    \draw (0.6,0.3) node {$x^\circ$};
+                                    \draw (-0.5,0.5) node {$2x^\circ$};
+                                    
+                                    \draw[thick, blue] (2,0) arc (0:45:2cm);
+                                    \draw[thick, red] (0,2) arc (90:180:2cm);
+                                    
+                                    \node[blue] at (2.2,0.8) {$L$};
+                                    \node[red] at (-1.5,1.5) {$2L$};
+                                \end{tikzpicture}
+                            </script>
+                        </div>
+                    </div>
+
+                    <div class="card variation-card">
+                        <h3>Conceptual Trap: Proportional Chords?</h3>
+                        <p>Do <strong>chords</strong> scale proportionately like arcs do? <strong>NO!</strong> <br>If you double an angle, the chord does NOT double. For example, a \(180^\circ\) chord (a diameter) is length \(2r\). A \(90^\circ\) chord is length \(\sqrt{2}r \approx 1.41r\). <br> \(2 \times 1.41r = 2.82r\), which is vastly larger than \(2r\). Chords do not scale linearly!</p>
+                        <div class="tikz-container">
+                            <script type="text/tikz">
+                                \begin{tikzpicture}[scale=1]
+                                    \draw (0,0) circle (2cm);
+                                    \filldraw (0,0) circle (1.5pt) node[below] {$O$};
+                                    \draw (-2,0) -- (2,0) node[midway, below] {$180^\circ$ Chord (Diameter)};
+                                    \draw (0,2) -- (2,0) node[midway, above right] {$90^\circ$ Chord};
+                                    \draw (0,0) -- (0,2);
+                                \end{tikzpicture}
+                            </script>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="quiz-section">
+                    <h4>Self-Check Quiz</h4>
+                    <div class="tf-question">
+                        <strong>True or False:</strong> If arc \(AB\) subtends an angle of \(30^\circ\) at the circumference, and arc \(CD\) subtends an angle of \(90^\circ\) at the circumference, then arc \(CD\) is three times longer than arc \(AB\).
+                        <br><button class="reveal-btn" onclick="toggleFeedback('feed4-tf')">Reveal Answer</button>
+                        <div id="feed4-tf" class="feedback"><strong>True!</strong> According to Theorem 14, arcs are directly proportional to the angles they subtend at the circumference. Since \(90^\circ / 30^\circ = 3\), the arc length ratio is also \(3:1\).</div>
+                    </div>
+
+                    <div class="mc-question">
+                        <strong>Multiple Choice:</strong> The ratio of the lengths of three arcs \(AB : BC : CA\) on a circle is \(1 : 2 : 3\). What is the size of the angle subtended by arc \(BC\) at the centre of the circle?
+                        <div class="mc-options">
+                            <button class="mc-option" onclick="handleMC(this, false, 'feed4-mc')">A) 60°</button>
+                            <button class="mc-option" onclick="handleMC(this, false, 'feed4-mc')">B) 90°</button>
+                            <button class="mc-option" onclick="handleMC(this, true, 'feed4-mc')">C) 120°</button>
+                            <button class="mc-option" onclick="handleMC(this, false, 'feed4-mc')">D) 180°</button>
+                        </div>
+                        <div id="feed4-mc" class="feedback">
+                            <span class="mc-result-msg"></span> <strong>Explanation: (C)</strong> The total circle is \(360^\circ\). The angles at the centre will follow the arc ratio \(1 : 2 : 3\). Let the angles be \(x, 2x, 3x\). Their sum is \(6x = 360^\circ\), so \(x = 60^\circ\). The angle for arc \(BC\) is \(2x = 120^\circ\).
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        function openTab(evt, tabName) {
+            // Hide all tab contents completely using display: none
+            var tabcontent = document.getElementsByClassName("tab-content");
+            for (var i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].classList.remove("active");
+            }
+            
+            // Remove 'active' class from all buttons
+            var tablinks = document.getElementsByClassName("tab-button");
+            for (var i = 0; i < tablinks.length; i++) {
+                tablinks[i].classList.remove("active");
+            }
+            
+            // Show the selected tab and set button to active
+            document.getElementById(tabName).classList.add("active");
+            evt.currentTarget.classList.add("active");
+        }
+
+        function toggleFeedback(id) {
+            var element = document.getElementById(id);
+            if (element.style.display === "block") {
+                element.style.display = "none";
+            } else {
+                element.style.display = "block";
+            }
+        }
+
+        function handleMC(btnElement, isCorrect, feedId) {
+            // Disable all buttons in this question group
+            var parent = btnElement.parentElement;
+            var buttons = parent.getElementsByClassName("mc-option");
+            for (var i = 0; i < buttons.length; i++) {
+                buttons[i].disabled = true;
+            }
+            
+            var feedElement = document.getElementById(feedId);
+            var msgSpan = feedElement.querySelector(".mc-result-msg");
+            
+            // Apply styling based on correctness
+            if (isCorrect) {
+                btnElement.style.backgroundColor = "var(--correct)";
+                btnElement.style.color = "white";
+                btnElement.style.borderColor = "var(--correct)";
+                msgSpan.innerHTML = "<strong>Correct!</strong>";
+                msgSpan.style.color = "var(--correct)";
+            } else {
+                btnElement.style.backgroundColor = "var(--incorrect)";
+                btnElement.style.color = "white";
+                btnElement.style.borderColor = "var(--incorrect)";
+                msgSpan.innerHTML = "<strong>Incorrect.</strong>";
+                msgSpan.style.color = "var(--incorrect)";
+            }
+            
+            // Show the explanation
+            feedElement.style.display = "block";
+        }
+    </script>
+</body>
+</html>
